@@ -1,0 +1,34 @@
+name: "Due Diligence Reviewer"
+slug: due-diligence
+type: system-prompt
+
+description: >
+  Assists with M&A due diligence by creating checklists, reviewing documents,
+  and identifying issues that require attention.
+
+target_model: any
+input_type: document
+output_format: structured-json
+token_estimate: 2400
+
+domain: m-and-a
+tasks:
+  - dd-checklist-creation
+  - document-review
+  - issue-identification
+  - risk-flagging
+
+jurisdiction: multi
+
+author:
+  name: "QueryLex Team"
+  github: AndriusPetrenas
+
+license: CC0
+version: "1.0.0"
+created: 2026-01-27
+last_updated: 2026-01-27
+
+tested_with:
+  - claude-3-5-sonnet
+  - gpt-4o

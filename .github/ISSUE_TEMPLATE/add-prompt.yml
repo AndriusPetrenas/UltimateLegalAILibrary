@@ -1,0 +1,65 @@
+name: Add System Prompt
+description: Submit a new system prompt to the library
+title: "[Prompt] "
+labels: ["prompt", "new-resource"]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Prompt Name
+      placeholder: "e.g., Contract Analyst"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: domain
+    attributes:
+      label: Domain
+      options:
+        - contracts
+        - litigation
+        - compliance
+        - corporate
+        - ip
+        - employment
+        - research
+        - other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      placeholder: "What does this prompt do? What tasks is it best for?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: prompt
+    attributes:
+      label: Prompt Content
+      description: "Paste the full system prompt here"
+      render: markdown
+    validations:
+      required: true
+
+  - type: input
+    id: tested_with
+    attributes:
+      label: Tested With
+      placeholder: "e.g., Claude 3.5 Sonnet, GPT-4o"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: I have tested this prompt and it works as described
+          required: true
+        - label: This prompt does not contain proprietary or confidential content
+          required: true
+        - label: I agree to license this under CC0
+          required: true

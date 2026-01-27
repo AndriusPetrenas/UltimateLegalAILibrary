@@ -1,0 +1,36 @@
+{
+  "mcpServers": {
+    "courtlistener": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-server-courtlistener"],
+      "env": {
+        "COURTLISTENER_API_KEY": "${COURTLISTENER_API_KEY}"
+      }
+    },
+    "eurlex": {
+      "command": "python",
+      "args": ["-m", "eurlex_mcp_server"],
+      "env": {}
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem"],
+      "env": {
+        "ALLOWED_DIRECTORIES": "/Users/[USERNAME]/Documents/Legal"
+      }
+    },
+    "google-drive": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-server-gdrive"],
+      "env": {
+        "GOOGLE_CREDENTIALS_PATH": "~/.config/gcloud/application_default_credentials.json"
+      }
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-server-memory"],
+      "env": {},
+      "description": "Persistent memory across conversations"
+    }
+  }
+}

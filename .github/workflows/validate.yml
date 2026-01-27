@@ -1,0 +1,58 @@
+name: Validate Resources
+
+on:
+  pull_request:
+    paths:
+      - 'prompts/**'
+      - 'workflows/**'
+      - 'tools/**'
+      - 'datasets/**'
+      - 'mcp-configs/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install pyyaml jsonschema
+
+      - name: Validate YAML files
+        run: |
+          python -c "
+          import yaml
+          import glob
+          import sys
+
+          errors = []
+          for f in glob.glob('**/*.yaml', recursive=True):
+              try:
+                  with open(f) as file:
+                      yaml.safe_load(file)
+                  print(f'✓ {f}')
+              except Exception as e:
+                  errors.append(f'{f}: {e}')
+                  print(f'✗ {f}: {e}')
+
+          if errors:
+              sys.exit(1)
+          "
+
+      - name: Check for required files
+        run: |
+          for dir in prompts/system-prompts/*/; do
+            if [ ! -f "${dir}metadata.yaml" ]; then
+              echo "Missing metadata.yaml in $dir"
+              exit 1
+            fi
+            if [ ! -f "${dir}prompt.md" ]; then
+              echo "Missing prompt.md in $dir"
+              exit 1
+            fi
+          done

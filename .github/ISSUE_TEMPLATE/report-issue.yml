@@ -1,0 +1,32 @@
+name: Report Issue
+description: Report a bug or broken link
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: type
+    attributes:
+      label: Issue Type
+      options:
+        - Broken link
+        - Incorrect information
+        - Outdated content
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: resource
+    attributes:
+      label: Affected Resource
+      placeholder: "e.g., prompts/system-prompts/contract-analyst"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      placeholder: "Describe the issue"
+    validations:
+      required: true

@@ -1,0 +1,57 @@
+name: "EyeCite"
+slug: eyecite
+type: tool-link
+
+description: >
+  Fast, accurate citation extraction from legal text. Developed by Free Law
+  Project for CourtListener. Handles reporter citations, statutory citations,
+  and Id. references.
+
+repository: https://github.com/freelawproject/eyecite
+documentation: https://github.com/freelawproject/eyecite#readme
+pypi: eyecite
+
+language: python
+install_command: "pip install eyecite"
+license: BSD-2-Clause
+stars: 120
+last_commit: "2024-10"
+
+our_evaluation:
+  overall_rating: 5
+
+  strengths:
+    - "Very fast - processes thousands of citations per second"
+    - "High accuracy on US legal citations"
+    - "Handles complex citation formats (Id., supra, etc.)"
+    - "Permissive BSD license"
+    - "Lightweight with minimal dependencies"
+    - "Used in production by CourtListener"
+
+  weaknesses:
+    - "US-centric (limited EU/UK citation support)"
+    - "No entity extraction beyond citations"
+    - "Requires understanding of legal citation formats"
+
+  best_for:
+    - "Building legal citation networks"
+    - "Citation validation and normalization"
+    - "Legal research tools"
+    - "Document cross-referencing"
+
+  not_recommended_for:
+    - "Non-US legal documents"
+    - "General legal NER (use LexNLP instead)"
+
+  alternatives:
+    - lexnlp
+
+category: nlp
+subcategory: citations
+tags:
+  - citations
+  - extraction
+  - case-law
+  - research
+
+last_evaluated: 2026-01-27

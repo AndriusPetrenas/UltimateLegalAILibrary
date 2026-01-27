@@ -1,0 +1,42 @@
+name: "Contract Analyst"
+slug: contract-analyst
+type: system-prompt
+
+description: >
+  Expert system prompt for analyzing commercial contracts. Identifies risks,
+  extracts key terms, and provides structured analysis with clause references.
+
+target_model: any
+input_type: document
+output_format: structured-json
+token_estimate: 2800
+
+domain: contracts
+tasks:
+  - clause-identification
+  - risk-assessment
+  - obligation-extraction
+  - deadline-detection
+  - party-identification
+
+jurisdiction: multi
+
+files:
+  prompt: prompt.md
+  examples: examples/
+
+author:
+  name: "QueryLex Team"
+  github: AndriusPetrenas
+
+license: CC0
+version: "1.0.0"
+created: 2026-01-27
+last_updated: 2026-01-27
+
+tested_with:
+  - claude-3-5-sonnet
+  - claude-3-opus
+  - gpt-4o
+  - gpt-4-turbo
+  - gemini-1.5-pro

@@ -1,0 +1,62 @@
+name: "LexNLP"
+slug: lexnlp
+type: tool-link
+
+description: >
+  Comprehensive Python library for extracting structured information from
+  legal and regulatory text. Extracts dates, money, citations, named
+  entities, and more.
+
+repository: https://github.com/LexPredict/lexpredict-lexnlp
+documentation: https://lexpredict-lexnlp.readthedocs.io/
+pypi: lexnlp
+
+language: python
+install_command: "pip install lexnlp"
+license: AGPL-3.0
+stars: 760
+last_commit: "2024-08"
+
+our_evaluation:
+  overall_rating: 4
+
+  strengths:
+    - "Comprehensive extraction: dates, money, citations, definitions"
+    - "Legal-domain specific (not generic NLP)"
+    - "Good documentation with examples"
+    - "Active maintenance by LexPredict"
+    - "Pre-trained models included"
+
+  weaknesses:
+    - "AGPL license restricts commercial use without open-sourcing"
+    - "Heavy dependencies (spaCy, scikit-learn, etc.)"
+    - "Primarily English-focused"
+    - "Some extractors have mediocre accuracy on complex text"
+
+  best_for:
+    - "Contract data extraction pipelines"
+    - "Legal document preprocessing"
+    - "Citation parsing and normalization"
+    - "Building legal search indexes"
+
+  not_recommended_for:
+    - "Closed-source commercial products (AGPL)"
+    - "Non-English documents"
+    - "Real-time/low-latency applications"
+
+  alternatives:
+    - blackstone
+    - spacy-legal
+    - eyecite
+
+category: nlp
+subcategory: extraction
+tags:
+  - ner
+  - extraction
+  - contracts
+  - citations
+  - dates
+  - money
+
+last_evaluated: 2026-01-27

@@ -1,0 +1,59 @@
+name: "Unstructured"
+slug: unstructured
+type: tool-link
+
+description: >
+  Universal document parser that handles PDFs, Word docs, images, HTML, and
+  more. Extracts text while preserving structure. Good for RAG pipelines.
+
+repository: https://github.com/Unstructured-IO/unstructured
+documentation: https://unstructured-io.github.io/unstructured/
+pypi: unstructured
+
+language: python
+install_command: "pip install unstructured[all-docs]"
+license: Apache-2.0
+stars: 6500
+last_commit: "2024-11"
+
+our_evaluation:
+  overall_rating: 4
+
+  strengths:
+    - "Handles many document formats (PDF, DOCX, HTML, images)"
+    - "OCR support for scanned documents"
+    - "Preserves document structure (headers, tables, lists)"
+    - "Apache 2.0 license (commercial-friendly)"
+    - "Active development and good community"
+    - "Integrates well with LangChain, LlamaIndex"
+
+  weaknesses:
+    - "Large install with many dependencies"
+    - "OCR quality varies by document"
+    - "Can be slow on large documents"
+    - "Table extraction not always perfect"
+
+  best_for:
+    - "Building RAG pipelines"
+    - "Legal document ingestion"
+    - "Processing mixed document types"
+    - "OCR of scanned legal documents"
+
+  not_recommended_for:
+    - "Simple text files (overkill)"
+    - "High-volume real-time processing"
+
+  alternatives:
+    - pdfplumber
+    - marker-pdf
+
+category: document-processing
+subcategory: parsing
+tags:
+  - pdf
+  - docx
+  - ocr
+  - rag
+  - extraction
+
+last_evaluated: 2026-01-27

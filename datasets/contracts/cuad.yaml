@@ -1,0 +1,73 @@
+name: "CUAD"
+slug: cuad
+type: dataset-link
+full_name: "Contract Understanding Atticus Dataset"
+
+description: >
+  Expert-annotated dataset of 510 commercial contracts with 41 types of
+  legal clause annotations. Created by The Atticus Project with legal
+  experts. The gold standard for contract analysis.
+
+source:
+  organization: "The Atticus Project"
+  website: https://www.atticusprojectai.org/cuad
+  paper: https://arxiv.org/abs/2103.06268
+  year: 2021
+
+download:
+  huggingface: "theatticusproject/cuad-qa"
+  direct: https://zenodo.org/record/4599830
+  github: https://github.com/TheAtticusProject/cuad
+
+size:
+  documents: 510
+  annotations: 13000
+  file_size: "~500MB"
+
+format:
+  type: "SQuAD-style JSON"
+  structure: "Question-answer pairs for clause extraction"
+
+clause_types:
+  - Document Name
+  - Parties
+  - Agreement Date
+  - Effective Date
+  - Expiration Date
+  - Renewal Term
+  - Notice Period
+  - Governing Law
+  - Most Favored Nation
+  - Non-Compete
+  - Exclusivity
+  - No-Solicit
+  - Termination for Convenience
+  - "... and 28 more"
+
+license: CC-BY-4.0
+
+citation: |
+  @inproceedings{hendrycks2021cuad,
+    title={CUAD: An Expert-Annotated NLP Dataset for Legal Contract Review},
+    author={Hendrycks, Dan and Burns, Collin and Chen, Anya and Ball, Spencer},
+    booktitle={NeurIPS 2021},
+    year={2021}
+  }
+
+use_cases:
+  - "Training contract analysis models"
+  - "Clause extraction fine-tuning"
+  - "Benchmarking legal NLP systems"
+  - "Building contract review tools"
+
+our_notes: >
+  The best publicly available contract dataset. The 41 clause types cover
+  most provisions you'd want to extract from commercial agreements.
+  Consider using with MAUD for M&A-specific clauses.
+
+related_datasets:
+  - maud
+  - contract-nli
+  - atticus
+
+last_updated: 2026-01-27

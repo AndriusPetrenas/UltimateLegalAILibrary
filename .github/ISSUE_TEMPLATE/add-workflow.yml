@@ -1,0 +1,51 @@
+name: Add Workflow
+description: Submit a new workflow to the library
+title: "[Workflow] "
+labels: ["workflow", "new-resource"]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Workflow Name
+      placeholder: "e.g., Contract Comparison"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: engine
+    attributes:
+      label: Target Engine
+      options:
+        - QueryLex
+        - n8n
+        - Both
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      placeholder: "What does this workflow do? What problem does it solve?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: workflow_json
+    attributes:
+      label: Workflow Definition
+      description: "Paste the JSON/YAML workflow definition"
+      render: json
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: I have tested this workflow
+          required: true
+        - label: This workflow does not contain API keys or secrets
+          required: true

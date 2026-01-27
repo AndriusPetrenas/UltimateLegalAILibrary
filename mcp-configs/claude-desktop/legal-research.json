@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "courtlistener": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-server-courtlistener"],
+      "env": {
+        "COURTLISTENER_API_KEY": "${COURTLISTENER_API_KEY}"
+      },
+      "description": "US case law search via CourtListener"
+    },
+    "eurlex": {
+      "command": "python",
+      "args": ["-m", "eurlex_mcp_server"],
+      "env": {},
+      "description": "EU legislation and case law via EUR-Lex"
+    }
+  }
+}

@@ -1,0 +1,44 @@
+name: Add Tool Evaluation
+description: Submit an evaluation of a legal AI tool
+title: "[Tool] "
+labels: ["tool", "new-resource"]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Tool Name
+      placeholder: "e.g., LexNLP"
+    validations:
+      required: true
+
+  - type: input
+    id: repository
+    attributes:
+      label: Repository URL
+      placeholder: "https://github.com/..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: strengths
+    attributes:
+      label: Strengths
+      placeholder: "What is this tool good at?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: weaknesses
+    attributes:
+      label: Weaknesses
+      placeholder: "What are its limitations?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: best_for
+    attributes:
+      label: Best For
+      placeholder: "What use cases is it best suited for?"
+    validations:
+      required: true

@@ -1,0 +1,53 @@
+name: "Contract Comparison"
+slug: contract-comparison
+type: workflow
+
+description: >
+  Compares two versions of a contract, identifying differences in key
+  provisions and highlighting new risks or changes.
+
+engine: querylex
+complexity: medium
+
+inputs:
+  - name: contract_a
+    type: document
+    required: true
+    description: "Base version (e.g., your template)"
+  - name: contract_b
+    type: document
+    required: true
+    description: "Comparison version (e.g., counterparty markup)"
+
+outputs:
+  - name: comparison_report
+    type: markdown
+    description: "Detailed comparison with change highlights"
+
+nodes:
+  - id: start
+    type: start
+  - id: extract_a
+    type: action
+    description: "Extract key clauses from Contract A"
+  - id: extract_b
+    type: action
+    description: "Extract key clauses from Contract B"
+  - id: compare
+    type: action
+    description: "Compare extractions and identify differences"
+  - id: assess_risk
+    type: action
+    description: "Assess risk impact of changes"
+  - id: output
+    type: end
+
+estimated_runtime: "45-90 seconds"
+
+author:
+  name: "QueryLex Team"
+  github: AndriusPetrenas
+
+license: CC0
+version: "1.0.0"
+created: 2026-01-27

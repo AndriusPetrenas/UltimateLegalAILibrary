@@ -1,0 +1,64 @@
+name: "LegalBench"
+slug: legalbench
+type: dataset-link
+full_name: "LegalBench: A Collaboratively Built Benchmark for Legal Reasoning"
+
+description: >
+  Comprehensive benchmark with 162 tasks covering legal reasoning abilities.
+  Created collaboratively by 40+ legal professionals and NLP researchers.
+  Tests issue spotting, rule recall, rule application, and more.
+
+source:
+  organization: "Stanford, MIT, et al."
+  website: https://hazyresearch.stanford.edu/legalbench/
+  paper: https://arxiv.org/abs/2308.11462
+  year: 2023
+
+download:
+  huggingface: "nguha/legalbench"
+  github: https://github.com/HazyResearch/legalbench
+
+size:
+  tasks: 162
+  samples: "~20,000 total"
+  file_size: "~100MB"
+
+format:
+  type: "JSON"
+  structure: "Task-specific prompts with gold answers"
+
+task_categories:
+  - Issue Spotting (identify legal issues)
+  - Rule Recall (recall relevant legal rules)
+  - Rule Application (apply rules to facts)
+  - Rule Conclusion (draw legal conclusions)
+  - Interpretation (statutory interpretation)
+  - Rhetorical Understanding (legal writing analysis)
+
+license: CC-BY-4.0
+
+citation: |
+  @article{guha2023legalbench,
+    title={LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning in Large Language Models},
+    author={Guha, Neel and others},
+    journal={NeurIPS 2023},
+    year={2023}
+  }
+
+use_cases:
+  - "Evaluating LLM legal reasoning"
+  - "Comparing model performance on legal tasks"
+  - "Identifying model weaknesses"
+  - "Academic research"
+
+our_notes: >
+  The most comprehensive legal reasoning benchmark available. Essential for
+  anyone building or evaluating legal AI. Use this alongside domain-specific
+  datasets like CUAD for complete evaluation.
+
+related_datasets:
+  - lexglue
+  - legal-lama
+  - casehold
+
+last_updated: 2026-01-27

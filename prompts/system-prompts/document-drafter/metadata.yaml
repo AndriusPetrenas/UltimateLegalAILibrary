@@ -1,0 +1,35 @@
+name: "Document Drafter"
+slug: document-drafter
+type: system-prompt
+
+description: >
+  Creates legal documents from specifications. Focuses on clear language,
+  proper structure, and jurisdiction-appropriate provisions.
+
+target_model: claude-3
+input_type: text
+output_format: markdown
+token_estimate: 2000
+
+domain: drafting
+tasks:
+  - contract-drafting
+  - memo-drafting
+  - letter-drafting
+  - policy-drafting
+
+jurisdiction: multi
+
+author:
+  name: "QueryLex Team"
+  github: AndriusPetrenas
+
+license: CC0
+version: "1.0.0"
+created: 2026-01-27
+last_updated: 2026-01-27
+
+tested_with:
+  - claude-3-5-sonnet
+  - claude-3-opus
+  - gpt-4o

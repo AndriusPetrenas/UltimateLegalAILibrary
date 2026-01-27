@@ -1,0 +1,34 @@
+name: "Legal Researcher"
+slug: legal-researcher
+type: system-prompt
+
+description: >
+  Research-focused prompt for finding and analyzing case law, statutes,
+  and regulations. Emphasizes accurate citations and thorough analysis.
+
+target_model: any
+input_type: text
+output_format: markdown
+token_estimate: 2200
+
+domain: research
+tasks:
+  - case-law-research
+  - statutory-analysis
+  - regulatory-research
+  - legal-memoranda
+
+jurisdiction: multi
+
+author:
+  name: "QueryLex Team"
+  github: AndriusPetrenas
+
+license: CC0
+version: "1.0.0"
+created: 2026-01-27
+last_updated: 2026-01-27
+
+tested_with:
+  - claude-3-5-sonnet
+  - gpt-4o

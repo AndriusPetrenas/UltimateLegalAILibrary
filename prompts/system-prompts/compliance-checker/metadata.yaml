@@ -1,0 +1,34 @@
+name: "Compliance Checker"
+slug: compliance-checker
+type: system-prompt
+
+description: >
+  Analyzes documents and practices for regulatory compliance including
+  GDPR, AML/KYC, securities regulations, and industry-specific requirements.
+
+target_model: any
+input_type: document
+output_format: structured-json
+token_estimate: 2500
+
+domain: compliance
+tasks:
+  - gdpr-compliance
+  - aml-review
+  - policy-analysis
+  - gap-assessment
+
+jurisdiction: multi
+
+author:
+  name: "QueryLex Team"
+  github: AndriusPetrenas
+
+license: CC0
+version: "1.0.0"
+created: 2026-01-27
+last_updated: 2026-01-27
+
+tested_with:
+  - claude-3-5-sonnet
+  - gpt-4o
