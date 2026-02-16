@@ -1,0 +1,29 @@
+name: "AI Act Risk Assessment"
+type: workflow
+description: "EU AI Act compliance assessment: classifies your AI system through a smart interview, delivers structured risk classification (Prohibited/High-Risk/Limited/Minimal), and provides obligations on demand. No dataset required."
+engine: QueryLex
+domain: ai-regulation
+jurisdiction: EU
+language: en
+tasks:
+  - ai-act-classification
+  - risk-assessment
+  - compliance-obligations
+  - regulatory-analysis
+models_used:
+  - any (uses your selected model)
+requires_dataset: false
+node_count: 2
+node_types:
+  - start
+  - action
+features:
+  - embedded-knowledge-base
+  - conversational-interview
+  - multi-phase-analysis
+  - optional-rag-grounding
+author:
+  name: "QueryLex Team"
+  website: "https://querylex.com"
+license: CC0
+version: "1.0.0"

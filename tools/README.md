@@ -2,19 +2,12 @@
 
 Curated evaluations of tools for legal NLP and document processing.
 
-## Categories
-
-### NLP Libraries
-Tools for natural language processing on legal text:
+## NLP Libraries
 - [LexNLP](./nlp/lexnlp.yaml) - Legal entity extraction
-- [Blackstone](./nlp/blackstone.yaml) - UK legal NLP
 - [EyeCite](./nlp/eyecite.yaml) - Citation extraction
 
-### Document Processing
-Tools for handling legal documents:
-- [Docassemble](./document-processing/docassemble.yaml) - Document automation
-- [PDFPlumber](./document-processing/pdfplumber.yaml) - PDF extraction
-- [Unstructured](./document-processing/unstructured.yaml) - Universal parser
+## Document Processing
+- [Unstructured](./document-processing/unstructured.yaml) - Universal document parser
 
 ## Evaluation Criteria
 

@@ -1,0 +1,47 @@
+{
+  "id": "tpl_french_contract_gen",
+  "name": "French Contract Generator",
+  "description": "Generate a complete French-law-aware contract (NDA, Service Agreement, CDI) from a brief description, with [A COMPLETER] placeholders.",
+  "nodes": [
+    {
+      "id": "node_1",
+      "type": "start",
+      "x": 100,
+      "y": 250,
+      "data": {
+        "name": "Start"
+      }
+    },
+    {
+      "id": "node_2",
+      "type": "action",
+      "x": 350,
+      "y": 250,
+      "data": {
+        "name": "Classify Contract Type",
+        "prompt": "Analyze the following brief and classify the contract type.\n\nBrief: {{input}}\n\nIdentify:\n1. Contract type: One of \"NDA\", \"SERVICE_AGREEMENT\", \"EMPLOYMENT_CDI\", or \"OTHER\" (specify)\n2. Party types: e.g., \"societes_francaises\", \"PME_client\", \"personne_physique\"\n3. Sector indicators: e.g., \"informatique\", \"conseil\", \"commerce\"\n4. Key elements mentioned by user\n\nRespond ONLY with valid JSON:\n{\"contract_type\": \"\", \"party_types\": [], \"sector\": \"\", \"key_elements\": [], \"language\": \"fr\"}",
+        "model": "gpt-4o-mini",
+        "temperature": 0.1,
+        "json_mode": true,
+        "max_tokens": 500
+      }
+    },
+    {
+      "id": "node_3",
+      "type": "action",
+      "x": 650,
+      "y": 250,
+      "data": {
+        "name": "Generate French Contract",
+        "prompt": "Tu es un juriste expert en droit francais specialise dans la redaction de contrats.\n\nCLASSIFICATION:\n{{node_2.ai_output}}\n\nBRIEF ORIGINAL:\n{{input}}\n\nINSTRUCTIONS:\n1. IDENTIFIE le type de contrat a partir de la classification ci-dessus.\n2. SELECTIONNE la structure standard appropriee en droit francais.\n3. GENERE un document complet avec:\n   - Langage juridique standard en francais\n   - Numerotation des articles (1, 2, 3...)\n   - Marqueurs [A COMPLETER] pour toutes les donnees variables (noms, adresses, montants, dates)\n   - References juridiques appropriees (ex: Article 1231-5 du Code civil)\n   - Convention \"bis\" pour les articles inseres (5bis, 9bis)\n\n4. Pour chaque type de contrat, inclure les clauses obligatoires:\n   - NDA: Identification des parties (Divulgatrice/Receptrice), Definitions (table), Obligations de confidentialite, Propriete intellectuelle, Duree, Restitution/destruction, Recours, Dispositions generales\n   - PRESTATION DE SERVICES: Definitions et Objet, Nature des Prestations, Duree et Renouvellement, Conditions Financieres, Obligations Reciproques, Propriete Intellectuelle, Confidentialite, Responsabilite et Assurance, Resiliation, Clauses generales\n   - CDI: Identification, Poste et fonctions, Remuneration, Periode d'essai, Duree du travail, Conges, Clause de non-concurrence, Confidentialite, Dispositions diverses\n\n5. FORMATE la sortie comme suit:\n\n---\n**RESUME DE LA STRUCTURE**\n[Nombre d'articles, sections cles]\n\n**CONTRAT**\n[Document complet avec articles numerotes]\n\n**GUIDE DE PERSONNALISATION**\n[Liste des champs [A COMPLETER] avec explications]\n\n**POINTS FORTS DU CONTRAT**\n[3-5 points forts de ce contrat]\n---",
+        "model": "gpt-4o",
+        "temperature": 0.4,
+        "max_tokens": 6000
+      }
+    }
+  ],
+  "edges": [
+    { "from": "node_1", "to": "node_2" },
+    { "from": "node_2", "to": "node_3" }
+  ]
+}

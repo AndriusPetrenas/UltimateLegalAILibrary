@@ -1,0 +1,35 @@
+{
+  "id": "tpl_legal_research",
+  "name": "Legal Research Pipeline",
+  "description": "Deep legal research: decomposes your question into 3 sub-questions, retrieves relevant documents in parallel, and generates structured analysis with citations. Requires a dataset.",
+  "nodes": [
+    {
+      "id": "node_1",
+      "type": "start",
+      "x": 100,
+      "y": 250,
+      "data": {
+        "name": "Start"
+      }
+    },
+    {
+      "id": "node_2",
+      "type": "legal_research",
+      "x": 450,
+      "y": 250,
+      "data": {
+        "name": "Legal Research",
+        "dataset": "",
+        "query_template": "{{input}}",
+        "top_k": 8,
+        "model": "gpt-4o",
+        "decompose_prompt": "Decompose the following legal query into exactly 3 sub-questions that comprehensively cover the topic.\n\nQuery: {{input}}\n\nRules:\n1. Sub-question 1 (FOUNDATIONAL FRAMEWORK): Focus on definitions, legal regime, and foundational principles. Frame as: 'Quel est le regime juridique...' or 'Quelles sont les definitions...'\n2. Sub-question 2 (CONDITIONS & OBLIGATIONS): Focus on requirements, eligibility, and obligations. Frame as: 'Quelles sont les conditions...' or 'Quels sont les pouvoirs...'\n3. Sub-question 3 (APPLICATION & VARIATIONS): Focus on concrete application, special cases, and control mechanisms. Frame as: 'Comment s'articulent...' or 'Dans quelles conditions...'\n\nEach sub-question should be a complete interrogative sentence of 30-60 words in French.\n\nRespond in JSON:\n{\"sub_questions\": [\"question1\", \"question2\", \"question3\"]}",
+        "response_system_prompt": "Tu es un expert juridique francais generant une analyse juridique complete. Utilise des citations inline au format francais: (Code civil - Article - XXX), (Cour de cassation, date, numero), (CJUE - Affaire C-XXX/XX). Structure: I) Section principale, A. Sous-section, 1. Points numerotes. Sois complet mais concentre sur la sous-question. Longueur: 800-1500 mots par reponse.",
+        "summary_prompt": ""
+      }
+    }
+  ],
+  "edges": [
+    { "from": "node_1", "to": "node_2" }
+  ]
+}

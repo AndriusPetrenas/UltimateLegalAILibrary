@@ -1,0 +1,30 @@
+name: "Legal Research Pipeline"
+type: workflow
+description: "Deep legal research with query decomposition, parallel retrieval, and structured analysis with citations"
+engine: QueryLex
+domain: legal-research
+jurisdiction: France, EU
+language: fr
+tasks:
+  - legal-research
+  - case-analysis
+  - statutory-interpretation
+  - multi-source-analysis
+models_used:
+  - gpt-4o (decomposition + analysis + summary)
+requires_dataset: true
+node_count: 2
+node_types:
+  - start
+  - legal_research (specialized multi-step node)
+features:
+  - Query decomposition into 3 sub-questions
+  - Parallel document retrieval (ThreadPoolExecutor, 3 workers)
+  - Parallel analysis generation per sub-question
+  - Final summary combining all analyses
+  - French legal citation format
+author:
+  name: "QueryLex Team"
+  website: "https://querylex.com"
+license: CC0
+version: "1.0.0"

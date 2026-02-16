@@ -1,343 +1,176 @@
-# Ultimate Legal AI Library - Repository Structure
+# Ultimate Legal AI Library - Repository Structure & Roadmap
 
-This document defines the complete repository structure for the Legal AI Library. Use this as a blueprint when creating files and folders.
+This document shows the current repository structure and the planned roadmap for future additions. Items marked with `[PLANNED]` do not exist yet and are open for contributions.
 
 ---
 
-## Directory Tree
+## Current Directory Tree
 
 ```
 UltimateLegalAILibrary/
 │
-├── README.md                           # Main landing page
+├── README.md
 ├── LICENSE                             # CC0 1.0 Universal
-├── CONTRIBUTING.md                     # Contribution guidelines
-├── CODE_OF_CONDUCT.md                  # Community standards
-├── CHANGELOG.md                        # Version history
+├── CONTRIBUTING.md
+├── CODE_OF_CONDUCT.md
+├── CHANGELOG.md
+├── REPO_STRUCTURE.md                   # This file
 │
 ├── .github/
 │   ├── ISSUE_TEMPLATE/
-│   │   ├── add-prompt.yml              # Form for adding prompts
-│   │   ├── add-workflow.yml            # Form for adding workflows
-│   │   ├── add-tool.yml                # Form for linking tools
-│   │   ├── add-dataset.yml             # Form for datasets
-│   │   └── report-issue.yml            # Bug/broken link reports
-│   ├── PULL_REQUEST_TEMPLATE.md        # PR template
+│   │   ├── add-prompt.yml
+│   │   ├── add-workflow.yml
+│   │   ├── add-tool.yml
+│   │   └── report-issue.yml
+│   ├── PULL_REQUEST_TEMPLATE.md
 │   └── workflows/
-│       ├── validate.yml                # Schema validation on PR
-│       ├── build-index.yml             # Auto-generate library-index.json
-│       └── link-check.yml              # Weekly dead link detection
-│
-├── _index/                             # Auto-generated indexes (don't edit)
-│   ├── library-index.json              # Complete searchable index
-│   ├── prompts-index.json              # Prompts only
-│   ├── workflows-index.json            # Workflows only
-│   └── stats.json                      # Counts, last updated, etc.
-│
-│ ══════════════════════════════════════════════════════════════════════
-│ HOSTED RESOURCES (Directly Downloadable)
-│ ══════════════════════════════════════════════════════════════════════
+│       ├── validate.yml
+│       └── link-check.yml
 │
 ├── prompts/
-│   ├── README.md                       # How to use prompts
+│   ├── README.md
 │   │
 │   ├── system-prompts/
-│   │   ├── contract-analyst/
-│   │   │   ├── metadata.yaml           # Prompt metadata
-│   │   │   ├── prompt.md               # THE ACTUAL PROMPT
-│   │   │   ├── README.md               # Usage guide, examples
-│   │   │   └── examples/
-│   │   │       ├── input-1.txt
-│   │   │       └── output-1.md
-│   │   │
-│   │   ├── legal-researcher/
-│   │   │   ├── metadata.yaml
-│   │   │   ├── prompt.md
-│   │   │   └── README.md
-│   │   │
-│   │   ├── due-diligence-reviewer/
-│   │   │   ├── metadata.yaml
-│   │   │   ├── prompt.md
-│   │   │   └── README.md
-│   │   │
-│   │   ├── compliance-checker/
-│   │   │   ├── metadata.yaml
-│   │   │   ├── prompt.md
-│   │   │   └── README.md
-│   │   │
-│   │   ├── document-drafter/
-│   │   │   ├── metadata.yaml
-│   │   │   ├── prompt.md
-│   │   │   └── README.md
-│   │   │
-│   │   ├── clause-extractor/
-│   │   │   ├── metadata.yaml
-│   │   │   ├── prompt.md
-│   │   │   └── README.md
-│   │   │
-│   │   ├── gdpr-auditor/
-│   │   │   ├── metadata.yaml
-│   │   │   ├── prompt.md
-│   │   │   └── README.md
-│   │   │
-│   │   ├── litigation-strategist/
-│   │   │   ├── metadata.yaml
-│   │   │   ├── prompt.md
-│   │   │   └── README.md
-│   │   │
-│   │   ├── ip-analyst/
-│   │   │   ├── metadata.yaml
-│   │   │   ├── prompt.md
-│   │   │   └── README.md
-│   │   │
-│   │   └── employment-law-advisor/
-│   │       ├── metadata.yaml
-│   │       ├── prompt.md
-│   │       └── README.md
+│   │   ├── contract-analyst/           # metadata.yaml, prompt.md, README.md
+│   │   ├── legal-researcher/           # metadata.yaml, prompt.md
+│   │   ├── due-diligence/              # metadata.yaml, prompt.md
+│   │   ├── compliance-checker/         # metadata.yaml, prompt.md
+│   │   └── document-drafter/           # metadata.yaml, prompt.md
 │   │
 │   └── prompt-templates/
-│       ├── README.md
-│       ├── clause-extraction.md        # Template with {{CLAUSE_TYPE}}
-│       ├── risk-assessment.md          # Template with {{DOCUMENT}}
-│       ├── summary-generation.md
-│       ├── comparison-analysis.md
-│       ├── legal-memo-structure.md
-│       ├── client-letter-draft.md
-│       ├── deposition-questions.md
-│       ├── contract-negotiation.md
-│       ├── regulatory-filing.md
-│       └── case-brief-template.md
+│       ├── clause-extraction.md
+│       ├── risk-assessment.md
+│       └── summary-generation.md
 │
 ├── workflows/
-│   ├── README.md                       # How workflows work
-│   │
-│   ├── contract-review/
-│   │   ├── metadata.yaml
-│   │   ├── workflow.json               # Importable workflow
-│   │   ├── README.md                   # Setup instructions
-│   │   └── diagram.png                 # Visual representation
-│   │
-│   ├── contract-comparison/
-│   │   ├── metadata.yaml
-│   │   ├── workflow.json
-│   │   ├── README.md
-│   │   └── diagram.png
-│   │
-│   ├── due-diligence/
-│   │   ├── metadata.yaml
-│   │   ├── workflow.json
-│   │   └── README.md
-│   │
-│   ├── legal-research/
-│   │   ├── metadata.yaml
-│   │   ├── workflow.json
-│   │   └── README.md
-│   │
-│   ├── compliance-audit/
-│   │   ├── metadata.yaml
-│   │   ├── workflow.json
-│   │   └── README.md
-│   │
-│   ├── document-assembly/
-│   │   ├── metadata.yaml
-│   │   ├── workflow.json
-│   │   └── README.md
-│   │
-│   ├── legal-memo-generator/
-│   │   ├── metadata.yaml
-│   │   ├── workflow.json
-│   │   └── README.md
-│   │
-│   ├── case-summarizer/
-│   │   ├── metadata.yaml
-│   │   ├── workflow.json
-│   │   └── README.md
-│   │
-│   ├── clause-risk-scorer/
-│   │   ├── metadata.yaml
-│   │   ├── workflow.json
-│   │   └── README.md
-│   │
-│   ├── late-payment-calculator/
-│   │   ├── metadata.yaml
-│   │   ├── workflow.json               # Includes code node
-│   │   └── README.md
-│   │
-│   ├── email-drafter/
-│   │   ├── metadata.yaml
-│   │   ├── workflow.json
-│   │   └── README.md
-│   │
-│   └── legal-translation/
-│       ├── metadata.yaml
-│       ├── workflow.json
-│       └── README.md
+│   ├── README.md
+│   ├── french-contract-generator/      # metadata.yaml, workflow.json, README.md
+│   ├── legal-research/                 # metadata.yaml, workflow.json, README.md
+│   └── workflow-engine/                # workflow_engine.py, extensions.py, README.md
 │
 ├── mcp-configs/
-│   ├── README.md                       # MCP setup guide
-│   │
+│   ├── README.md
 │   ├── claude-desktop/
-│   │   ├── legal-research.json         # EUR-Lex + CourtListener
-│   │   ├── document-management.json    # Google Drive + iManage
-│   │   ├── full-legal-stack.json       # Combined config
-│   │   ├── westlaw-integration.json    # Westlaw API (requires subscription)
-│   │   ├── lexisnexis-integration.json # LexisNexis API
-│   │   ├── courtlistener.json          # Free US case law
-│   │   ├── eurlex.json                 # EU legislation
-│   │   └── github-legal-repos.json     # Access legal code repos
-│   │
-│   ├── server-guides/
-│   │   ├── courtlistener-mcp.md        # Setup guide for CourtListener MCP
-│   │   ├── eurlex-mcp.md               # EUR-Lex MCP setup
-│   │   ├── imanage-mcp.md              # iManage integration
-│   │   ├── google-drive-legal.md       # Google Drive for legal docs
-│   │   ├── westlaw-mcp.md              # Westlaw API integration
-│   │   └── custom-database-mcp.md      # Connect to custom legal DB
-│   │
-│   └── custom-servers/
-│       └── citation-validator/
-│           ├── metadata.yaml
-│           ├── server.py               # Custom MCP server
-│           ├── requirements.txt
-│           └── README.md
+│   │   ├── legal-research.json
+│   │   ├── document-management.json
+│   │   └── full-legal-stack.json
+│   └── server-guides/
+│       └── courtlistener-mcp.md
 │
 ├── code-snippets/
 │   ├── README.md
-│   │
 │   ├── python/
-│   │   ├── citation-parser.py          # Parse legal citations
-│   │   ├── contract-chunker.py         # Smart document chunking
-│   │   ├── legal-ner-utils.py          # Named entity recognition
-│   │   ├── bluebook-formatter.py       # Format citations to Bluebook
-│   │   ├── date-extractor.py           # Extract dates from legal text
-│   │   ├── clause-classifier.py        # Classify clause types
-│   │   ├── redaction-helper.py         # PII detection and redaction
-│   │   ├── pdf-to-markdown.py          # Convert legal PDFs
-│   │   └── embedding-utils.py          # Embedding generation helpers
-│   │
-│   └── typescript/
-│       ├── citation-parser.ts          # TypeScript citation parser
-│       ├── legal-date-parser.ts        # Date parsing utilities
-│       ├── contract-types.ts           # TypeScript types for contracts
-│       └── clause-extractor.ts         # Extract clauses from HTML/MD
+│   │   ├── citation-parser.py
+│   │   ├── contract-chunker.py
+│   │   └── rag-pipeline/               # 14 modules (~8,500 lines)
+│   │       ├── README.md
+│   │       ├── requirements.txt
+│   │       ├── supabase_setup.sql
+│   │       ├── example.py
+│   │       ├── __init__.py
+│   │       ├── agentic_rag.py
+│   │       ├── colbert_service.py
+│   │       ├── document_processor.py
+│   │       ├── embedding_service.py
+│   │       ├── hyde.py
+│   │       ├── legal_filters.py
+│   │       ├── legal_tokenizer.py
+│   │       ├── llm_utils.py
+│   │       ├── metadata_extractor.py
+│   │       ├── query_classifier.py
+│   │       ├── query_decomposer.py
+│   │       ├── reranker.py
+│   │       ├── sac_generator.py
+│   │       └── supabase_client.py
+│   └── [PLANNED] typescript/
 │
 ├── sample-data/
 │   ├── README.md
-│   │
 │   ├── contract-clauses/
-│   │   ├── metadata.yaml
-│   │   ├── indemnification-clauses.jsonl    # ~100 examples
-│   │   ├── limitation-of-liability.jsonl
-│   │   ├── termination-clauses.jsonl
-│   │   ├── force-majeure-clauses.jsonl
-│   │   ├── confidentiality-clauses.jsonl
-│   │   ├── ip-assignment-clauses.jsonl
-│   │   └── non-compete-clauses.jsonl
-│   │
-│   ├── legal-citations/
-│   │   ├── us-case-citations.csv            # ~1000 examples
-│   │   ├── us-statute-citations.csv
-│   │   ├── eu-case-citations.csv
-│   │   └── uk-case-citations.csv
-│   │
+│   │   └── indemnification-clauses.jsonl
 │   └── test-documents/
-│       ├── sample-nda.pdf
-│       ├── sample-nda.md                    # Markdown version
-│       ├── sample-msa.pdf
-│       ├── sample-employment-agreement.pdf
-│       ├── sample-lease.pdf
-│       └── sample-terms-of-service.md
-│
-│ ══════════════════════════════════════════════════════════════════════
-│ LINKED RESOURCES (Curated External References)
-│ ══════════════════════════════════════════════════════════════════════
+│       └── sample-nda.md
 │
 ├── tools/
-│   ├── README.md                       # Tool selection guide
-│   │
+│   ├── README.md
 │   ├── nlp/
-│   │   ├── lexnlp.yaml                 # LexPredict/LexNLP
-│   │   ├── blackstone.yaml             # ICL Blackstone
-│   │   ├── legal-bert.yaml             # Legal-BERT models
-│   │   ├── spacy-legal.yaml            # spaCy for legal text
-│   │   ├── eyecite.yaml                # Citation extraction
-│   │   └── legal-sbert.yaml            # Sentence transformers
-│   │
-│   ├── document-processing/
-│   │   ├── docassemble.yaml            # Document automation
-│   │   ├── pdfplumber.yaml             # PDF extraction
-│   │   ├── unstructured.yaml           # Universal doc parser
-│   │   ├── marker-pdf.yaml             # PDF to markdown
-│   │   └── camelot.yaml                # Table extraction
-│   │
-│   ├── automation/
-│   │   ├── accord-project.yaml         # Smart legal contracts
-│   │   ├── hotdocs.yaml                # Document assembly
-│   │   └── contract-express.yaml       # Contract automation
-│   │
-│   └── research/
-│       ├── courtlistener-api.yaml      # Free US case law API
-│       ├── caselaw-access-project.yaml # Harvard case law
-│       ├── eurlex-api.yaml             # EU legislation
-│       └── google-scholar-legal.yaml   # Legal academic search
+│   │   ├── lexnlp.yaml
+│   │   └── eyecite.yaml
+│   └── document-processing/
+│       └── unstructured.yaml
 │
 ├── datasets/
-│   ├── README.md                       # Dataset selection guide
-│   │
+│   ├── README.md
 │   ├── contracts/
-│   │   ├── cuad.yaml                   # Contract Understanding Atticus
-│   │   ├── atticus.yaml                # Atticus project contracts
-│   │   ├── contract-nli.yaml           # Contract NLI dataset
-│   │   └── maud.yaml                   # M&A contract dataset
-│   │
-│   ├── case-law/
-│   │   ├── casehold.yaml               # CaseHOLD benchmark
-│   │   ├── scotus-opinions.yaml        # Supreme Court opinions
-│   │   ├── courtlistener-bulk.yaml     # Bulk case law download
-│   │   ├── echr-cases.yaml             # European Court of HR
-│   │   └── caselaw-access.yaml         # Harvard Law case corpus
-│   │
-│   ├── legislation/
-│   │   ├── us-code.yaml                # US Code dataset
-│   │   ├── eurlex-corpus.yaml          # EU legislation corpus
-│   │   └── uk-legislation.yaml         # UK legislation dataset
-│   │
+│   │   └── cuad.yaml
 │   └── benchmarks/
-│       ├── legalbench.yaml             # Legal reasoning benchmark
-│       ├── lexglue.yaml                # Legal NLU benchmark
-│       ├── legal-lama.yaml             # Legal knowledge probing
-│       └── legal-qa.yaml               # Legal Q&A benchmarks
-│
-├── models/
-│   ├── README.md                       # Model selection guide
-│   │
-│   ├── embeddings/
-│   │   ├── comparison.md               # Benchmark comparison table
-│   │   ├── legal-bert.yaml
-│   │   ├── legal-sbert.yaml
-│   │   ├── bge-legal.yaml
-│   │   ├── e5-legal.yaml
-│   │   └── openai-embeddings.yaml
-│   │
-│   └── llm-benchmarks/
-│       └── legal-task-performance.md   # LLM performance on legal tasks
+│       └── legalbench.yaml
 │
 └── docs/
-    ├── getting-started.md              # Quick start guide
-    ├── faq.md                          # Frequently asked questions
-    │
-    ├── use-cases/
-    │   ├── contract-review-pipeline.md
-    │   ├── legal-research-assistant.md
-    │   ├── compliance-automation.md
-    │   ├── due-diligence-workflow.md
-    │   └── document-drafting-system.md
-    │
-    └── contributing/
-        ├── prompt-guidelines.md        # How to write good legal prompts
-        ├── workflow-guidelines.md      # How to structure workflows
-        └── quality-standards.md        # What we accept
+    ├── getting-started.md
+    └── faq.md
 ```
+
+---
+
+## Roadmap (Planned Additions)
+
+The following resources are planned for future releases. Contributions welcome!
+
+### System Prompts
+- [ ] Clause Extractor
+- [ ] GDPR Auditor
+- [ ] Litigation Strategist
+- [ ] IP Analyst
+- [ ] Employment Law Advisor
+
+### Prompt Templates
+- [ ] comparison-analysis.md
+- [ ] legal-memo-structure.md
+- [ ] client-letter-draft.md
+- [ ] deposition-questions.md
+- [ ] contract-negotiation.md
+- [ ] regulatory-filing.md
+- [ ] case-brief-template.md
+
+### Workflows
+- [ ] Contract Review
+- [ ] Contract Comparison
+- [ ] Due Diligence Checklist
+- [ ] Compliance Audit
+- [ ] Document Assembly
+- [ ] Legal Memo Generator
+- [ ] Case Summarizer
+- [ ] Clause Risk Scorer
+- [ ] Late Payment Calculator
+- [ ] Email Drafter
+- [ ] Legal Translation
+
+### MCP Configs
+- [ ] Westlaw integration
+- [ ] LexisNexis integration
+- [ ] CourtListener standalone
+- [ ] EUR-Lex standalone
+- [ ] GitHub Legal Repos
+- [ ] Additional server guides
+
+### Code Snippets
+- [ ] TypeScript utilities (citation-parser, legal-date-parser, contract-types, clause-extractor)
+- [ ] Python: legal-ner-utils, bluebook-formatter, date-extractor, clause-classifier, redaction-helper, pdf-to-markdown, embedding-utils
+
+### Sample Data
+- [ ] Additional contract clause types (limitation-of-liability, termination, force-majeure, confidentiality, IP-assignment, non-compete)
+- [ ] Legal citations (US case, US statute, EU case, UK case)
+- [ ] Additional test documents (MSA, employment agreement, lease, terms of service)
+
+### Tools & Datasets
+- [ ] Additional NLP tool evaluations (Blackstone, Legal-BERT, spaCy Legal, Legal-SBERT)
+- [ ] Additional document processing tools (Docassemble, pdfplumber, marker-pdf, Camelot)
+- [ ] Additional dataset links (CaseHOLD, SCOTUS, CourtListener bulk, ECHR, etc.)
+
+### Models Directory
+- [ ] Embedding model comparison
+- [ ] LLM legal task benchmarks
 
 ---
 

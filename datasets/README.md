@@ -2,20 +2,11 @@
 
 Curated links to datasets for training and evaluating legal AI models.
 
-## Categories
+## Contracts
+- [CUAD](./contracts/cuad.yaml) - Contract clause extraction (510 contracts, 41 clause types)
 
-### Contract Datasets
-- [CUAD](./contracts/cuad.yaml) - Contract clause extraction
-- [MAUD](./contracts/maud.yaml) - M&A contract understanding
-- [Contract-NLI](./contracts/contract-nli.yaml) - Contract entailment
-
-### Case Law
-- [CaseHOLD](./case-law/casehold.yaml) - Holding statement identification
-- [CourtListener Bulk](./case-law/courtlistener-bulk.yaml) - US case law corpus
-
-### Benchmarks
+## Benchmarks
 - [LegalBench](./benchmarks/legalbench.yaml) - Legal reasoning tasks
-- [LexGLUE](./benchmarks/lexglue.yaml) - Legal NLU benchmark
 
 ## Usage Notes
 

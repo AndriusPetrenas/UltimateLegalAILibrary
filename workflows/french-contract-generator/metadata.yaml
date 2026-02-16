@@ -1,0 +1,25 @@
+name: "French Contract Generator"
+type: workflow
+description: "Generate complete French-law-aware contracts (NDA, Service Agreement, CDI) from a brief description with [A COMPLETER] placeholders"
+engine: QueryLex
+domain: contracts
+jurisdiction: France
+language: fr
+tasks:
+  - contract-drafting
+  - nda-generation
+  - employment-contracts
+  - service-agreements
+models_used:
+  - gpt-4o-mini (classification)
+  - gpt-4o (contract generation)
+requires_dataset: false
+node_count: 3
+node_types:
+  - start
+  - action (x2)
+author:
+  name: "QueryLex Team"
+  website: "https://querylex.com"
+license: CC0
+version: "1.0.0"

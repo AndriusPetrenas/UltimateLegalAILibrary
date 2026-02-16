@@ -26,3 +26,21 @@ Fill-in-the-blank templates for common operations:
 
 ### Using a System Prompt
 
+Copy the prompt content and use it as a system message:
+
+```python
+with open('system-prompts/contract-analyst/prompt.md', 'r') as f:
+    system_prompt = f.read()
+
+response = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": "Analyze this NDA for risks..."}
+    ]
+)
+```
+
+### Using a Prompt Template
+
+Open the template, fill in the bracketed placeholders with your specific content, and send as a user message.

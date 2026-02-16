@@ -19,27 +19,28 @@ cd UltimateLegalAILibrary
 
 | Category | Count | Description |
 |----------|-------|-------------|
-| [**System Prompts**](./prompts/system-prompts/) | 25+ | Ready-to-use AI personas for legal tasks |
-| [**Prompt Templates**](./prompts/prompt-templates/) | 15+ | Fill-in-the-blank prompts for common operations |
-| [**Workflows**](./workflows/) | 12+ | Importable automation definitions |
-| [**MCP Configs**](./mcp-configs/) | 8+ | Claude Desktop and server configurations |
-| [**Tools**](./tools/) | 20+ | Curated links to legal NLP libraries |
-| [**Datasets**](./datasets/) | 15+ | Links to training and evaluation data |
-| [**Code Snippets**](./code-snippets/) | 15+ | Python/TypeScript utilities |
-| [**Sample Data**](./sample-data/) | Various | Example clauses, citations, documents |
+| [**System Prompts**](./prompts/system-prompts/) | 5 | Ready-to-use AI personas for legal tasks |
+| [**Prompt Templates**](./prompts/prompt-templates/) | 3 | Fill-in-the-blank prompts for common operations |
+| [**Workflows**](./workflows/) | 2 | Importable automation definitions (+ workflow engine) |
+| [**MCP Configs**](./mcp-configs/) | 3 | Claude Desktop and server configurations |
+| [**Tools**](./tools/) | 3 | Curated links to legal NLP libraries |
+| [**Datasets**](./datasets/) | 2 | Links to training and evaluation data |
+| [**RAG Pipeline**](./code-snippets/python/rag-pipeline/) | 14 modules | Production RAG system from QueryLex (~8,500 lines) |
+| [**Code Snippets**](./code-snippets/) | 17 | Python utilities + example script |
+| [**Sample Data**](./sample-data/) | 2 | Example clauses and documents |
 
 ## Hosted vs. Linked Resources
 
 ### Directly Downloadable (Hosted)
-- System prompts and prompt templates (`.md`, `.txt`)
+- System prompts and prompt templates (`.md`)
 - Workflow definitions (`.json`, `.yaml`)
 - MCP server configurations (`.json`)
-- Code snippets (`.py`, `.ts`)
-- Sample datasets (`.csv`, `.jsonl`)
+- Code snippets (`.py`)
+- Sample data (`.jsonl`, `.md`)
 
 ### External References (Linked)
-- Full tools (LexNLP, Docassemble, etc.)
-- Large datasets (CUAD, CaseHOLD, LegalBench)
+- Full tools (LexNLP, Eyecite, Unstructured)
+- Large datasets (CUAD, LegalBench)
 - Embedding models (on HuggingFace)
 - Commercial APIs
 
@@ -59,9 +60,27 @@ cd UltimateLegalAILibrary
 
 | Workflow | Description | Engine |
 |----------|-------------|--------|
-| [Contract Comparison](./workflows/contract-comparison/) | Compare two contracts and highlight differences | QueryLex, n8n |
-| [Due Diligence](./workflows/due-diligence/) | Generate DD checklists from company info | QueryLex |
-| [Legal Memo Generator](./workflows/legal-memo/) | Structured memo from research query | Any |
+| [French Contract Generator](./workflows/french-contract-generator/) | Generate French-law contracts (NDA, CDI, Services) with placeholders | QueryLex |
+| [Legal Research Pipeline](./workflows/legal-research/) | Deep research with query decomposition and parallel retrieval | QueryLex |
+
+### RAG Pipeline (Full Source Code)
+
+Production-grade retrieval pipeline from [QueryLex](https://querylex.com). 14 modules, ~8,500 lines of Python. Fully self-contained and downloadable with `requirements.txt`.
+
+| Module | Purpose | Impact |
+|--------|---------|--------|
+| [Document Processor](./code-snippets/python/rag-pipeline/document_processor.py) | Token-based chunking with legal structure awareness | Core |
+| [Embedding Service](./code-snippets/python/rag-pipeline/embedding_service.py) | 5 providers: OpenAI, Cohere, Isaacus, Voyage, Qwen3 | Core |
+| [Cross-Encoder Reranker](./code-snippets/python/rag-pipeline/reranker.py) | Two-stage reranking | +15-25% accuracy |
+| [HyDE](./code-snippets/python/rag-pipeline/hyde.py) | Hypothetical Document Embeddings | +10-30% accuracy |
+| [Query Decomposer](./code-snippets/python/rag-pipeline/query_decomposer.py) | Multi-query with RRF merging | +15-25% recall |
+| [Agentic RAG](./code-snippets/python/rag-pipeline/agentic_rag.py) | Iterative search with self-correction | Complex queries |
+| [ColBERT Service](./code-snippets/python/rag-pipeline/colbert_service.py) | Token-level scoring approximation | Fine-grained |
+| [Query Classifier](./code-snippets/python/rag-pipeline/query_classifier.py) | Adaptive retrieval routing (zero-cost) | Optimization |
+| [Legal Tokenizer](./code-snippets/python/rag-pipeline/legal_tokenizer.py) | 100+ legal abbreviations, citation patterns | Legal domain |
+| [SAC Generator](./code-snippets/python/rag-pipeline/sac_generator.py) | Summary-Augmented Chunking | +10-20% accuracy |
+| [Metadata Extractor](./code-snippets/python/rag-pipeline/metadata_extractor.py) | LLM-based document metadata extraction | Filtering |
+| [LLM Utils](./code-snippets/python/rag-pipeline/llm_utils.py) | Shared LLM client for RAG features | Infrastructure |
 
 ### MCP Configurations
 
@@ -95,7 +114,7 @@ Import workflow JSON into your automation platform:
 
 ```bash
 # Download workflow
-curl -O https://raw.githubusercontent.com/AndriusPetrenas/UltimateLegalAILibrary/main/workflows/contract-comparison/workflow.json
+curl -O https://raw.githubusercontent.com/AndriusPetrenas/UltimateLegalAILibrary/main/workflows/legal-research/workflow.json
 
 # Import into QueryLex or n8n
 ```
