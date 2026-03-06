@@ -1,0 +1,39 @@
+name: "Sanctions Compliance Advisor (V3 — Deep Analysis)"
+type: workflow
+description: "Deep multi-node sanctions pipeline: intake questionnaire, concurrent theory analysis across 16+ provisions, dual-model evaluation, ownership cascade, and synthesis. Best for complex fact patterns with ownership chains, designated entities, or multi-jurisdictional exposure."
+engine: QueryLex
+domain: sanctions-compliance
+jurisdiction:
+  - EU
+  - US (OFAC)
+  - UK (OFSI)
+  - UN
+language: en
+tasks:
+  - sanctions-screening
+  - compliance-assessment
+  - multi-jurisdictional-analysis
+  - ownership-cascade
+  - designated-entity-screening
+models_used:
+  - gpt-4.1 (default, configurable)
+requires_dataset: false
+node_count: 2
+node_types:
+  - start
+  - sanctions_advisor
+features:
+  - intake-questionnaire
+  - concurrent-theory-analysis
+  - dual-model-evaluation
+  - ownership-cascade-analysis
+  - real-time-web-search
+  - database-provision-lookup
+  - entity-screening
+  - multi-jurisdictional-coverage
+  - real-time-sse-streaming
+author:
+  name: "QueryLex Team"
+  website: "https://querylex.com"
+license: CC0
+version: "3.0.0"

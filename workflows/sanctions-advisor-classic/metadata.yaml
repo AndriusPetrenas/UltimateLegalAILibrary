@@ -1,0 +1,32 @@
+name: "Sanctions Advisor (Classic — Single Agent)"
+type: workflow
+description: "Single-agent sanctions screening with real-time web search and tool use. Faster output for straightforward screening questions, quick designation checks, or simple compliance queries. EU, US OFAC, UK OFSI coverage."
+engine: QueryLex
+domain: sanctions-compliance
+jurisdiction:
+  - EU
+  - US (OFAC)
+  - UK (OFSI)
+language: en
+tasks:
+  - sanctions-screening
+  - quick-compliance-check
+  - designation-lookup
+models_used:
+  - gpt-4.1 (default, configurable)
+requires_dataset: false
+node_count: 2
+node_types:
+  - start
+  - sanctions_advisor
+features:
+  - single-agent-loop
+  - real-time-web-search
+  - database-provision-lookup
+  - entity-screening
+  - conversational
+author:
+  name: "QueryLex Team"
+  website: "https://querylex.com"
+license: CC0
+version: "2.0.0"

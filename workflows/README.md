@@ -6,12 +6,25 @@ Automation workflows for common legal tasks. Import into QueryLex or n8n.
 
 | Workflow | Description | Engine | Dataset Required |
 |----------|-------------|--------|:---:|
+| [AI Act Risk Assessment](./ai-act-risk-assessment/) | EU AI Act compliance: smart interview, 9-step classification, obligations report | QueryLex | No |
+| [Sanctions Compliance Advisor](./sanctions-compliance-advisor/) | Deep multi-node pipeline: intake, concurrent theory analysis, synthesis. EU, US OFAC, UK OFSI, UN | QueryLex | No |
+| [Sanctions Advisor (Classic)](./sanctions-advisor-classic/) | Single-agent sanctions screening with web search and tool use. Fast output for simple queries | QueryLex | No |
 | [French Contract Generator](./french-contract-generator/) | Generate French-law contracts (NDA, CDI, Services) | QueryLex | No |
 | [Legal Research Pipeline](./legal-research/) | Deep research with query decomposition and parallel retrieval | QueryLex | Yes |
 
 ## Workflow Engine
 
-The [Workflow Engine](./workflow-engine/) executes all workflows. It supports 6 node types: `start`, `action` (LLM), `retrieval` (vector search), `router` (conditional), `code` (sandboxed Python), and `legal_research` (multi-step research).
+The [Workflow Engine](./workflow-engine/) executes all workflows. It supports 7 node types:
+
+| Node Type | Purpose |
+|-----------|---------|
+| `start` | Entry point |
+| `action` | LLM call with optional retrieval grounding |
+| `retrieval` | Vector search (RAG) |
+| `router` | Conditional branching |
+| `code` | Sandboxed Python (RestrictedPython) |
+| `legal_research` | Multi-step research with decomposition |
+| `sanctions_advisor` | Sanctions compliance pipeline (V2 single-agent or V3 multi-node) |
 
 [Download workflow_engine.py](./workflow-engine/workflow_engine.py)
 

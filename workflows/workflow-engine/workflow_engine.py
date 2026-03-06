@@ -65,31 +65,21 @@ def run_restricted_code(bytecode, globals_dict, locals_dict):
     # The bytecode comes from RestrictedPython's compile_restricted which ensures safety
     _builtin_exec(bytecode, globals_dict, locals_dict)
 
-import os
-import sys
-
-# Add the RAG pipeline to the path so we can import its modules
-_rag_pipeline_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'code-snippets', 'python', 'rag-pipeline')
-if os.path.isdir(_rag_pipeline_dir) and _rag_pipeline_dir not in sys.path:
-    sys.path.insert(0, os.path.abspath(_rag_pipeline_dir))
-
-from llm_utils import get_rag_llm_client
-from extensions import get_authenticated_vector_client, get_embedding_service, device
-from document_processor import LegalDocumentProcessor
-
-# Default embedding model for legal sources (override with LEGAL_EMBEDDING_PROVIDER env var)
-LEGAL_EMBEDDING_PROVIDER = os.environ.get("LEGAL_EMBEDDING_PROVIDER", "text-embedding-3-small")
+from app.utils.llm_utils import get_rag_llm_client
+from app.extensions import get_authenticated_vector_client, get_embedding_service, device
+from app.utils.document_processor import LegalDocumentProcessor
 
 class WorkflowRunner:
     """
     Executes a DAG of nodes defined in JSON.
     """
-    def __init__(self, workflow_data, user=None):
+    def __init__(self, workflow_data, user=None, on_step_callback=None):
         self.workflow_data = workflow_data
         self.nodes = {n['id']: n for n in workflow_data.get('nodes', [])}
         self.edges = workflow_data.get('edges', [])
         self.context = {} # Shared state
         self.user = user
+        self.on_step_callback = on_step_callback
         self.logger = logging.getLogger(__name__)
 
     def run(self, initial_inputs=None):
@@ -220,15 +210,16 @@ class WorkflowRunner:
 
             resolved_prompt = self._resolve_variables(raw_prompt, self.context)
 
-            # 2. Prepare System Prompt
-            system_prompt = "You are a helpful assistant executing a workflow step."
+            # 2. Prepare System Prompt (custom from node data, or default)
+            system_prompt = data.get('system_prompt', "You are a helpful assistant executing a workflow step.")
             if json_mode:
                 system_prompt += " Output ONLY valid JSON."
 
-            # 3. Call LLM (with optional model override)
-            from llm_utils import RAGLLMClient
+            # 3. Call LLM (with optional model override, fallback to context model)
+            from app.utils.llm_utils import RAGLLMClient
+            if not model:
+                model = self.context.get('model')
             if model:
-                # Create a new client with the specified model
                 self.logger.info(f"Creating LLM client with model: {model}")
                 client = RAGLLMClient(preferred_model=model)
             else:
@@ -237,13 +228,101 @@ class WorkflowRunner:
 
             self.logger.info(f"Calling LLM with prompt length: {len(resolved_prompt)}")
 
+            # --- Optional retrieval grounding ---
+            retrieved_context = ""
+            if data.get('retrieval_grounding') and self.user:
+                try:
+                    dataset_name = data.get('dataset') or self.context.get('dataset')
+                    source_filters = self.context.get('source_filters')
+
+                    if dataset_name or source_filters:
+                        from app.legal_sources.config import LEGAL_EMBEDDING_PROVIDER
+
+                        use_legal_sources = not dataset_name and source_filters
+
+                        access_token = self.user.get('access_token')
+                        supabase_client = get_authenticated_vector_client(access_token)
+                        embedding_service = get_embedding_service(LEGAL_EMBEDDING_PROVIDER)
+                        doc_processor = LegalDocumentProcessor(
+                            embedding_service=embedding_service,
+                            device=device
+                        )
+                        doc_processor.supabase_client = supabase_client
+
+                        # Phase-aware query construction
+                        grounding_chat_history = self.context.get('chat_history') if data.get('use_chat_history') else None
+                        user_input = self.context.get('input', '')
+                        retrieval_query = self._build_retrieval_query(data, grounding_chat_history, user_input)
+
+                        results = doc_processor.query_dataset(
+                            dataset_name=dataset_name if not use_legal_sources else "legal_sources",
+                            query=retrieval_query,
+                            n_results=5,
+                            source_filters=source_filters if use_legal_sources else None
+                        )
+
+                        # Post-retrieval relevance filtering
+                        if results and results.get('documents') and results['documents'][0]:
+                            docs = results['documents'][0]
+                            metas = results['metadatas'][0]
+                            distances = results.get('distances', [[]])[0]
+
+                            filtered_parts = []
+                            for i, (doc, meta) in enumerate(zip(docs, metas)):
+                                # Filter by similarity score if available (threshold: 0.3)
+                                if distances and i < len(distances) and distances[i] < 0.3:
+                                    self.logger.debug(f"Skipping chunk {i}: similarity {distances[i]:.3f} below threshold 0.3")
+                                    continue
+                                source = meta.get('source', 'Unknown')
+                                filtered_parts.append(f"[Source: {source}]\n{doc}")
+
+                            if filtered_parts:
+                                retrieved_context = "\n\n---\n\n".join(filtered_parts)
+                                self.logger.info(f"Retrieval grounding: {len(filtered_parts)} relevant chunks (of {len(docs)} retrieved)")
+                            else:
+                                self.logger.info("Retrieval grounding: all chunks below relevance threshold, proceeding without")
+                        else:
+                            self.logger.info("Retrieval grounding: no results returned")
+                    else:
+                        self.logger.info("Retrieval grounding: no dataset or source filters available, skipping")
+                except Exception as e:
+                    self.logger.warning(f"Retrieval grounding failed (proceeding without): {e}")
+                    retrieved_context = ""
+
             try:
-                response = client.complete(
-                    prompt=resolved_prompt,
-                    system_prompt=system_prompt,
-                    max_tokens=max_tokens,
-                    temperature=temperature
-                )
+                # Multi-turn conversation: build proper alternating messages
+                # when the node opts in via use_chat_history and chat_history exists
+                chat_history = self.context.get('chat_history') if data.get('use_chat_history') else None
+
+                if chat_history and isinstance(chat_history, list):
+                    messages = [{"role": "system", "content": system_prompt}]
+                    for msg in chat_history:
+                        if msg.get('role') in ('user', 'assistant') and msg.get('content'):
+                            messages.append({"role": msg['role'], "content": msg['content']})
+                    # Build final user message with date context + retrieved docs + current input
+                    current_date = self.context.get('current_date', '')
+                    user_input = self.context.get('input', '')
+                    current_msg = f"Today's date: {current_date}" if current_date else ""
+                    if retrieved_context:
+                        current_msg += "\n\n## Source Documents\n" + retrieved_context
+                    current_msg += f"\n\n{user_input}"
+                    messages.append({"role": "user", "content": current_msg})
+
+                    self.logger.info(f"Using multi-turn messages: {len(messages)} messages (chat_history: {len(chat_history)})")
+                    response = client.complete(
+                        messages=messages,
+                        max_tokens=max_tokens,
+                        temperature=temperature
+                    )
+                else:
+                    if retrieved_context:
+                        resolved_prompt = f"## Source Documents\n{retrieved_context}\n\n{resolved_prompt}"
+                    response = client.complete(
+                        prompt=resolved_prompt,
+                        system_prompt=system_prompt,
+                        max_tokens=max_tokens,
+                        temperature=temperature
+                    )
                 self.logger.info(f"LLM response received, length: {len(response) if response else 0}")
                 
                 # Parse JSON if requested
@@ -286,6 +365,7 @@ class WorkflowRunner:
             # Get model for dataset
             try:
                 if use_legal_sources:
+                    from app.legal_sources.config import LEGAL_EMBEDDING_PROVIDER
                     emb_model = LEGAL_EMBEDDING_PROVIDER
                 else:
                     emb_model = auth_client.get_collection_embedding_model(dataset_name)
@@ -303,7 +383,7 @@ class WorkflowRunner:
                     n_results=top_k,
                     source_filters=source_filters if use_legal_sources else None
                 )
-
+                
                 # Format output
                 retrieved_text = ""
                 docs = []
@@ -311,7 +391,7 @@ class WorkflowRunner:
                     for doc, meta in zip(results['documents'][0], results['metadatas'][0]):
                         docs.append({"content": doc, "metadata": meta})
                         retrieved_text += f"Source: {meta.get('source', 'Unknown')}\n{doc}\n\n"
-
+                
                 return {"retrieved_context": retrieved_text, "documents": docs}
             except Exception as e:
                 self.logger.error(f"Retrieval Failed: {e}")
@@ -364,7 +444,7 @@ def run(inputs):
             model = data.get('model', 'gpt-4o')
             top_k = int(data.get('top_k', 8))
 
-            from llm_utils import RAGLLMClient
+            from app.utils.llm_utils import RAGLLMClient
             from concurrent.futures import ThreadPoolExecutor, as_completed
 
             llm_client = RAGLLMClient(preferred_model=model)
@@ -413,6 +493,7 @@ def run(inputs):
             access_token = self.user.get('access_token')
             auth_client = get_authenticated_vector_client(access_token)
             if use_legal_sources:
+                from app.legal_sources.config import LEGAL_EMBEDDING_PROVIDER
                 emb_model = LEGAL_EMBEDDING_PROVIDER
             else:
                 emb_model = auth_client.get_collection_embedding_model(dataset_name)
@@ -573,7 +654,131 @@ def run(inputs):
 
             return output
 
+        elif node_type == 'sanctions_advisor':
+            # ============================================================
+            # SANCTIONS ADVISOR NODE
+            # V2: Monolithic agentic loop (sanctions_tools.py)
+            # V3: Multi-node pipeline (sanctions_pipeline.py)
+            # Switch via 'version' field in node config (default: v3)
+            #
+            # Two-step intake flow (V3 only):
+            #   Step 1: generate_intake=True → Node 1 + Node 1.5 → returns questions
+            #   Step 2: intake_answers={...}  → full pipeline with answers injected
+            # ============================================================
+            model = data.get('model', 'gpt-4.1')
+            version = data.get('version', 'v3')
+            user_input = self.context.get('input', '')
+            current_date = self.context.get('current_date', '')
+
+            # Build chat history
+            chat_history = self.context.get('chat_history') if data.get('use_chat_history') else None
+
+            # Intake flow params
+            generate_intake = self.context.get('generate_intake', False)
+            intake_answers = self.context.get('intake_answers')
+            skip_intake = self.context.get('skip_intake', False)
+
+            # Step log for SSE streaming
+            step_log = []
+
+            def on_step(step):
+                step_log.append(step)
+                self.logger.info(f"[SANCTIONS_NODE] {step.get('message', '')}")
+                if self.on_step_callback:
+                    self.on_step_callback(step)
+
+            if version == 'v3':
+                from app.services.sanctions_pipeline import SanctionsAdvisorV3
+                advisor = SanctionsAdvisorV3(model=model)
+
+                # Step 1: Generate intake questions (Node 1 + Node 1.5 only)
+                if generate_intake and not skip_intake:
+                    intake_result = advisor.generate_questions(
+                        user_input=user_input,
+                        chat_history=chat_history,
+                        current_date=current_date,
+                        on_step=on_step,
+                    )
+                    return {
+                        "intake_questions": intake_result.get("questions", []),
+                        "intake_step": 1,
+                        "skip_reason": intake_result.get("skip_reason"),
+                        "countries_detected": intake_result.get("countries_detected", []),
+                        "entities_detected": intake_result.get("entities_detected", []),
+                        "step_log": step_log,
+                    }
+
+                # Step 2 (or direct run): Full pipeline, optionally with intake answers
+                result = advisor.run(
+                    user_input=user_input,
+                    chat_history=chat_history,
+                    current_date=current_date,
+                    on_step=on_step,
+                    intake_answers=intake_answers,
+                )
+            else:
+                from app.services.sanctions_tools import SanctionsAdvisor
+                advisor = SanctionsAdvisor(model=model)
+
+                result = advisor.run(
+                    user_input=user_input,
+                    chat_history=chat_history,
+                    current_date=current_date,
+                    on_step=on_step,
+                )
+
+            return {
+                "ai_output": result.get("ai_output", ""),
+                "tool_activity": result.get("tool_activity", []),
+                "web_citations": result.get("web_citations", []),
+                "sources_consulted": result.get("sources_consulted", []),
+                "step_log": step_log,
+            }
+
         return {}
+
+    def _build_retrieval_query(self, data, chat_history, user_input):
+        """Build a phase-aware retrieval query for grounding."""
+        # Check if this looks like a Phase 3 obligations request
+        obligations_keywords = ['obligation', 'comply', 'compliance', 'requirement', 'what must', 'what do i need']
+        is_obligations_request = any(kw in user_input.lower() for kw in obligations_keywords)
+
+        if is_obligations_request and chat_history:
+            # Scan backwards for the classification message
+            for msg in reversed(chat_history):
+                if msg.get('role') == 'assistant' and msg.get('content'):
+                    content = msg['content']
+                    if 'FINAL CLASSIFICATION' in content or any(e in content for e in ['\u274c', '\U0001f534', '\U0001f7e1', '\U0001f7e2']):
+                        # Extract key legal terms from classification
+                        terms = []
+                        # Extract risk level
+                        for level in ['PROHIBITED', 'HIGH-RISK', 'LIMITED RISK', 'MINIMAL RISK']:
+                            if level in content:
+                                terms.append(level.lower())
+                        # Extract article references (Art. XX, Article XX)
+                        articles = re.findall(r'Art(?:icle)?\.?\s*(\d+)', content)
+                        terms.extend([f"Article {a}" for a in articles])
+                        # Extract Annex references
+                        annexes = re.findall(r'Annex\s+(I{1,3}|IV|V)', content)
+                        terms.extend([f"Annex {a}" for a in annexes])
+                        # Extract role
+                        for role in ['provider', 'deployer', 'importer', 'distributor']:
+                            if role in content.lower():
+                                terms.append(role)
+                        # Extract key topic terms
+                        for topic in ['GPAI', 'FRIA', 'transparency', 'biometric', 'employment', 'recruitment',
+                                      'credit scoring', 'law enforcement', 'migration', 'education', 'critical infrastructure']:
+                            if topic.lower() in content.lower():
+                                terms.append(topic)
+
+                        if terms:
+                            query = "EU AI Act " + " ".join(terms) + " obligations requirements"
+                            self.logger.info(f"Phase 3 retrieval query built from classification: {query}")
+                            return query
+                        break  # Found classification msg but couldn't extract — fall through
+
+        # Phase 1/2: use the user's system description directly
+        return user_input
 
     def _resolve_variables(self, text, context):
         """

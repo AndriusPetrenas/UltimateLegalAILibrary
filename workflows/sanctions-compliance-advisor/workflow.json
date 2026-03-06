@@ -1,0 +1,16 @@
+{
+  "id": "tpl_sanctions_advisor",
+  "name": "Sanctions Compliance Advisor",
+  "description": "Deep multi-node pipeline: intake questionnaire, concurrent theory analysis across 16+ provisions, dual-model evaluation, ownership cascade, and synthesis. Best for complex fact patterns with ownership chains, designated entities, or multi-jurisdictional exposure.",
+  "nodes": [
+    {"id": "node_1", "type": "start", "x": 100, "y": 250, "data": {"name": "Start"}},
+    {"id": "node_2", "type": "sanctions_advisor", "x": 400, "y": 250, "data": {
+      "name": "Sanctions Analysis",
+      "model": "gpt-4.1",
+      "version": "v3",
+      "use_chat_history": true,
+      "max_tokens": 16384
+    }}
+  ],
+  "edges": [{"from": "node_1", "to": "node_2"}]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "tpl_sanctions_advisor_classic",
+  "name": "Sanctions Advisor (Classic)",
+  "description": "Single-agent sanctions screening with real-time web search and tool use. Faster output for straightforward screening questions, quick designation checks, or simple compliance queries. EU, US OFAC, UK OFSI coverage.",
+  "nodes": [
+    {"id": "node_1", "type": "start", "x": 100, "y": 250, "data": {"name": "Start"}},
+    {"id": "node_2", "type": "sanctions_advisor", "x": 400, "y": 250, "data": {
+      "name": "Sanctions Analysis (Classic)",
+      "model": "gpt-4.1",
+      "version": "v2",
+      "use_chat_history": true,
+      "max_tokens": 16384
+    }}
+  ],
+  "edges": [{"from": "node_1", "to": "node_2"}]
+}
